@@ -1,29 +1,5 @@
 <?php
 
-function mpr($val, $isXml = false, $_traceRewind = 0) {
-    if($isXml) {
-        header("content-type: text/xml");
-        die($val);
-    }
-    if(!headers_sent()) {
-        header("content-type: text/plain");
-    }
-    if (is_array($val) || is_object($val)) {
-        print_r($val);
-
-        if(is_array($val))
-            reset($val);
-    } else {
-        var_dump($val);
-    }
-    $trace = debug_backtrace();
-    echo sprintf("^--Who called me: %s line %s\n\n", $trace[$_traceRewind]['file'], $trace[$_traceRewind]['line']);
-}
-function mprd($val, $isXml = false) {
-    mpr($val, $isXml, 1);
-    die("die!\n\n");
-}
-
 /**
  * Funkcja robiąca rekursywnego normalnego merga przekazanych tablic.
  * Funkcja znaleziona na php.net w komentarzach userów.
