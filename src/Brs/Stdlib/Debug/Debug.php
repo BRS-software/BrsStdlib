@@ -5,6 +5,7 @@ use ReflectionClass;
 
 class Debug
 {
+    public static $maxOutputLength = 10000;
     protected static $sapi = null;
 
     public static function getSapi()
@@ -206,9 +207,20 @@ class Debug
             ob_start();
             var_dump($var);
             $output = ob_get_clean();
+
+            if (strlen($output) > self::$maxOutputLength) {
+                $output = substr($output, 0, self::$maxOutputLength)
+                    . sprintf(
+                        "\n\n ... truncated afater %s characters (full size: %s) see %s::\$maxOutputLength parameter\n",
+                        self::$maxOutputLength, strlen($output), get_class()
+                    );
+            }
+
         } else {
             $output = $var;
         }
+
+
 
         $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
         if (static::getSapi() == 'cli') {
