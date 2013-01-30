@@ -25,7 +25,7 @@ function dbg($var = null, $label = null, $echo = true)
 function dbgD($var = null, $label = null, $echo = true)
 {
     Debug::dump($var, $label, $echo, 1);
-    die("die!\n\n");
+    die(Debug::htmlFormat("die!\n\n", 'color:red'));
 }
 
 /**
@@ -48,7 +48,7 @@ function dbgAD(/*[$var1, $var2, $var3, ...]*/)
         Debug::dump($var, 'var ' . $i, true, false);
     }
     echo Debug::showCall();
-    die("die!\n\n");
+    die(Debug::htmlFormat("die!\n\n", 'color:red'));
 }
 
 /**
@@ -65,7 +65,7 @@ function dbgO($var = null, $label = null, $echo = true)
 function dbgOD($var = null, $label = null, $echo = true)
 {
     Debug::dumpObject($var, $label, $echo, false, 1);
-    die("die!\n\n");
+    die(Debug::htmlFormat("die!\n\n", 'color:red'));
 }
 
 /**
@@ -82,5 +82,5 @@ function dbgOF($var = null, $label = null, $echo = true)
 function dbgOFD($var = null, $label = null, $echo = true)
 {
     Debug::dumpObject($var, $label, $echo, true, 1);
-    die("die!\n\n");
+    die(Debug::htmlFormat("die!\n\n", 'color:red'));
 }

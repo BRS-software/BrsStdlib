@@ -5,8 +5,13 @@ use ReflectionClass;
 
 class Debug
 {
-    public static $maxOutputLength = 10000;
+    public static $maxOutputLength = 100000;
     protected static $sapi = null;
+
+    public function registerFunctions()
+    {
+        require_once __DIR__ . '/../../../DebugFunctions.php';
+    }
 
     public static function getSapi()
     {
@@ -198,7 +203,19 @@ class Debug
     public static function showCall($rewind = 0)
     {
         $trace = debug_backtrace()[$rewind+1];
-        return sprintf("^--Who called me: %s line %s\n\n", $trace['file'], $trace['line']);
+        return self::htmlFormat(sprintf("^--Who called me: %s line %s\n\n", $trace['file'], $trace['line']));
+    }
+
+    public static function htmlFormat($text, $style = null)
+    {
+        if (static::getSapi() === 'cli') {
+            return $text;
+        }
+        if ($style) {
+            return sprintf('<pre style="%s">%s</pre>', $style, $text);
+        } else {
+            return sprintf('<pre>%s</pre>', $text);
+        }
     }
 
     protected static function _dump($var = '', $label = null, $dumpVar = true)
@@ -220,18 +237,18 @@ class Debug
             $output = $var;
         }
 
+        if (extension_loaded('xdebug')) {
+            $output = preg_replace(["/\=\>\n(\s+)/m", "/\{\n(\s+)\.\.\.\n(\s+)\}/m"], [" => ", ""], $output);
+        } else {
+            $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
+        }
 
-
-        $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
         if (static::getSapi() == 'cli') {
             $output = PHP_EOL . $label
                     . PHP_EOL . $output
                     . PHP_EOL;
         } else {
-            $output = '<pre>'
-                    . $label
-                    . $output
-                    . '</pre>';
+            $output = self::htmlFormat($label . $output);
         }
         return $output;
     }
