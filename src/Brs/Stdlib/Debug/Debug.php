@@ -8,7 +8,7 @@ class Debug
     public static $maxOutputLength = 100000;
     protected static $sapi = null;
 
-    public function registerFunctions()
+    public static function registerFunctions()
     {
         require_once __DIR__ . '/../../../DebugFunctions.php';
     }
@@ -116,7 +116,8 @@ class Debug
             $methods = [];
             $showArgs = function($method) {
                 $params = [];
-                array_walk($method->getParameters(), function($p) use(&$params) {
+                $tmp = $method->getParameters(); // Only variables should be passed by reference
+                array_walk($tmp, function($p) use (&$params) {
                     // $params[] = str_replace('Parameter ', '', $p->__tostring());
                     $desc[] = '#' . $p->getPosition();
 
