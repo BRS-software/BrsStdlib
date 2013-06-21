@@ -11,14 +11,29 @@ class Debug
     public static function registerFunctions()
     {
         require_once __DIR__ . '/../../../DebugFunctions.php';
+
+        // hmm...
+        if (self::isTextSapi()) {
+            // xdebug_disable();
+            ini_set('html_errors', '0');
+        }
     }
 
     public static function getSapi()
     {
         if (static::$sapi === null) {
-            static::$sapi = PHP_SAPI;
+            if (isset($_SERVER) && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 'XMLHttpRequest' === $_SERVER['HTTP_X_REQUESTED_WITH']) {
+                static::$sapi = 'ajax';
+            } else {
+                static::$sapi = PHP_SAPI;
+            }
         }
         return static::$sapi;
+    }
+
+    public static function isTextSapi()
+    {
+        return self::getSapi() === 'cli' || self::getSapi() === 'ajax';
     }
 
     public static function dump($var = null, $label = null, $echo = true, $_callRewind = 0)
@@ -209,7 +224,7 @@ class Debug
 
     public static function htmlFormat($text, $style = null)
     {
-        if (static::getSapi() === 'cli') {
+        if (static::isTextSapi()) {
             return $text;
         }
         if ($style) {
@@ -244,7 +259,7 @@ class Debug
             $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
         }
 
-        if (static::getSapi() == 'cli') {
+        if (static::isTextSapi()) {
             $output = PHP_EOL . $label
                     . PHP_EOL . $output
                     . PHP_EOL;
