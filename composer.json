@@ -18,6 +18,10 @@
             "Brs\\Stdlib\\": "src/",
             "BrsStdlibTest\\": "tests/"
         },
+        "files": [
+            "src/GeneralFunctions.php",
+            "src/DebugFunctions.php"
+        ],
         "classmap": [
             "./Module.php"
         ]
