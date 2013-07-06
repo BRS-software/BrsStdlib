@@ -11,18 +11,13 @@ class Debug
     public static function registerFunctions()
     {
         require_once __DIR__ . '/../../../DebugFunctions.php';
-
-        // hmm...
-        if (self::isTextSapi()) {
-            // xdebug_disable();
-            ini_set('html_errors', '0');
-        }
     }
 
     public static function getSapi()
     {
         if (static::$sapi === null) {
             if (isset($_SERVER) && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 'XMLHttpRequest' === $_SERVER['HTTP_X_REQUESTED_WITH']) {
+                // ini_set('html_errors', 0);
                 static::$sapi = 'ajax';
             } else {
                 static::$sapi = PHP_SAPI;

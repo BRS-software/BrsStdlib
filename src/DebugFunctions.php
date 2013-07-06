@@ -7,6 +7,11 @@ if (! class_exists('Brs\Stdlib\Debug\Debug')) {
     require __DIR__ . '/Brs/Stdlib/Debug/Debug.php';
 }
 
+// disable html_error
+if (Debug::isTextSapi()) {
+    ini_set('html_errors', 0);
+}
+
 /**
  * Debug variable.
  * @param mixed $var Any variable

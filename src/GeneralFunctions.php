@@ -56,7 +56,7 @@ function array_walk_closure($array, Closure $closure) // XXX nie można wymusić
 function json_decode_nice($json, $assoc = true) {
     $json = str_replace(["\n", "\r", '\\'], ['', '', '\\\\'], $json);
     $json = preg_replace('/([{,]+)(\s*)([^"]+?)\s*:/','$1"$3":', $json);
-    dbg($json);
+    // dbg($json);
     return json_decode($json,$assoc);
 }
 
