@@ -14,6 +14,14 @@ if (Debug::isTextSapi()) {
 
 /**
  * Debug variable.
+ *
+ * Xdebug flags (set i.e. .htaccess):
+ * php_value xdebug.var_display_max_children 10
+ * php_value xdebug.var_display_max_depth 6
+ * php_value xdebug.var_display_max_data 512
+ * php_flag xdebug.overload_var_dump 1
+ * php_flag xdebug.cli_color 1
+ *
  * @param mixed $var Any variable
  * @param string $label Optional label
  * @param bool $echo Echo debug output string
