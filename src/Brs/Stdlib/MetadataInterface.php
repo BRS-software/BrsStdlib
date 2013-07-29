@@ -4,7 +4,7 @@ namespace Brs\Stdlib;
 
 interface MetadataInterface
 {
-    public function setMetaDataFromProvider(MetadataProviderInterface $provider);
-    public function setMetaData(array $metaData);
-    public function getMetaData();
+    public function setMetadataFromProvider(MetadataProviderInterface $provider);
+    public function setMetadata(array $metaData);
+    public function getMetadata();
 }
