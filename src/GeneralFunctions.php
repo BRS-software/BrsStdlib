@@ -54,8 +54,15 @@ function array_walk_closure($array, Closure $closure) // XXX nie można wymusić
 
 // json_decode_nice('{json:1, x: {"aaa": "A\B\C"}}'
 function json_decode_nice($json, $assoc = true) {
+    // remove comments
+    $json = preg_replace('#^\s*\/\/.*#m', '', $json);
+    // remove unwanted characters and last comma
     $json = str_replace(["\n", "\r", '\\'], ['', '', '\\\\'], $json);
-    $json = preg_replace('/([{,]+)(\s*)([^"]+?)\s*:/','$1"$3":', $json);
+    // remove last comma
+    $json = preg_replace('/\,(\s*)(\}|\])/', '$2', $json);
+    // add apostrophes to text keys
+    // $json = preg_replace('/([{,]+)(\s*)([^"]+?)\s*:/','$1"$3":', $json);
+    $json = preg_replace('/([{,]+)(\s*)([\w]+?)\s*:/','$1"$3":', $json);
     // dbg($json);
     return json_decode($json,$assoc);
 }
