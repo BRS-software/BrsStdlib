@@ -113,3 +113,25 @@ function brs_error_handler($errno, $errstr, $errfile, $errline) {
 function convert_errors_to_exceptions() {
     set_error_handler('brs_error_handler');
 }
+
+/**
+ * mkdir skipping current set umask
+ */
+function mkdir_fix($path, $mode = 0777, $recursive = false) {
+    $oldumask = umask(0);
+    if ($recursive) {
+        $dirs = explode(DIRECTORY_SEPARATOR , $path);
+        $count = count($dirs);
+        $path = '.';
+        for ($i = 0; $i < $count; ++$i) {
+            $path .= DIRECTORY_SEPARATOR . $dirs[$i];
+            if (! is_dir($path) && ! mkdir($path, $mode)) {
+                return false;
+            }
+        }
+    } elseif (! mkdir($path, $mode)) {
+        return false;
+    }
+    umask($oldumask);
+    return true;
+}
