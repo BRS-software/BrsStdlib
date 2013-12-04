@@ -121,8 +121,11 @@ function mkdir_fix($path, $mode = 0777, $recursive = false) {
     $oldumask = umask(0);
     if ($recursive) {
         $dirs = explode(DIRECTORY_SEPARATOR , $path);
+        if ($dirs[0] === '') {
+            array_shift($dirs);
+        }
         $count = count($dirs);
-        $path = '.';
+        $path = substr($path, 0, 1) === '/' ? '' : getcwd();
         for ($i = 0; $i < $count; ++$i) {
             $path .= DIRECTORY_SEPARATOR . $dirs[$i];
             if (! is_dir($path) && ! mkdir($path, $mode)) {
@@ -134,4 +137,20 @@ function mkdir_fix($path, $mode = 0777, $recursive = false) {
     }
     umask($oldumask);
     return true;
+}
+
+function rrmdir($prefix, $dir) {
+    $prefix = rtrim(trim($prefix), '/');
+    $dir = rtrim(trim($dir), '/');
+
+    if (! is_dir($prefix)) {
+        throw new Exception("Path prefix $prefix must be a directory");
+    }
+    if ($prefix !== substr($dir, 0, strlen($prefix))) {
+        throw new Exception("Dir $dir not is a sub directory of $prefix");
+    }
+    if (! is_dir($dir) || '/' == $dir) {
+        throw new Exception('Invalid dir to remove ' . $dir);
+    }
+    system("rm -rf " . escapeshellarg($dir));
 }
