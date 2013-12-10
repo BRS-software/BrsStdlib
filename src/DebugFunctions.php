@@ -7,9 +7,16 @@ if (! class_exists('Brs\Stdlib\Debug\Debug')) {
     require __DIR__ . '/Brs/Stdlib/Debug/Debug.php';
 }
 
+// set default debug depth
+dbgSet(Debug::CONFIG_SHOW_MED);
+
 // disable html_error
 if (Debug::isTextSapi()) {
     ini_set('html_errors', 0);
+}
+
+function dbgSet($config) {
+    Debug::set($config);
 }
 
 /**

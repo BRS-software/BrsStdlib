@@ -5,12 +5,35 @@ use ReflectionClass;
 
 class Debug
 {
+    const CONFIG_SHOW_MAX = 'max';
+    const CONFIG_SHOW_MED = 'med';
+    const CONFIG_SHOW_MIN = 'min';
+
     public static $maxOutputLength = 100000;
     protected static $sapi = null;
 
     public static function registerFunctions()
     {
         require_once __DIR__ . '/../../../DebugFunctions.php';
+        self::set(self::CONFIG_SHOW_MED);
+    }
+
+    public static function set($config)
+    {
+        switch($config) {
+            case self::CONFIG_SHOW_MIN:
+                ini_set('xdebug.var_display_max_children', 10);
+                ini_set('xdebug.var_display_max_depth', 2);
+                break;
+            case self::CONFIG_SHOW_MED:
+                ini_set('xdebug.var_display_max_children', 20);
+                ini_set('xdebug.var_display_max_depth', 3);
+                break;
+            case self::CONFIG_SHOW_MAX:
+                ini_set('xdebug.var_display_max_children', 30);
+                ini_set('xdebug.var_display_max_depth', 5);
+                break;
+        }
     }
 
     public static function getSapi()
