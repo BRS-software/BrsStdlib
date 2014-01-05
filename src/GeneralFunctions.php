@@ -141,7 +141,7 @@ function mkdir_fix($path, $mode = 0777, $recursive = false) {
 
 function rrmdir($prefix, $dir) {
     $prefix = rtrim(trim($prefix), '/');
-    $dir = rtrim(trim($dir), '/');
+    $dir = str_replace('..', '', rtrim(trim($dir), '/'));
 
     if (! is_dir($prefix)) {
         throw new Exception("Path prefix $prefix must be a directory");
@@ -149,7 +149,7 @@ function rrmdir($prefix, $dir) {
     if ($prefix !== substr($dir, 0, strlen($prefix))) {
         throw new Exception("Dir $dir not is a sub directory of $prefix");
     }
-    if (! is_dir($dir) || '/' == $dir) {
+    if (! dir($dir) || '/' == $dir) {
         throw new Exception('Invalid dir to remove ' . $dir);
     }
     system("rm -rf " . escapeshellarg($dir));
