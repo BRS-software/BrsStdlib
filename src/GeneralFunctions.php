@@ -149,8 +149,24 @@ function rrmdir($prefix, $dir) {
     if ($prefix !== substr($dir, 0, strlen($prefix))) {
         throw new Exception("Dir $dir not is a sub directory of $prefix");
     }
-    if (! dir($dir) || '/' == $dir) {
+    if (! is_dir($dir) || '/' == $dir) {
         throw new Exception('Invalid dir to remove ' . $dir);
     }
     system("rm -rf " . escapeshellarg($dir));
+}
+
+function rcopy($src, $dst, $mkdirMode = 0777, $mkdirRecursive = false) {
+    $dir = opendir($src);
+    mkdir_fix($dst, $mkdirMode, $mkdirRecursive);
+    while(false !== ( $file = readdir($dir)) ) {
+        if (( $file != '.' ) && ( $file != '..' )) {
+            if ( is_dir($src . '/' . $file) ) {
+                rcopy($src . '/' . $file,$dst . '/' . $file, $mkdirMode, $mkdirRecursive);
+            }
+            else {
+                copy($src . '/' . $file,$dst . '/' . $file);
+            }
+        }
+    }
+    closedir($dir);
 }
