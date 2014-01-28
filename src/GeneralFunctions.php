@@ -28,22 +28,7 @@ function &array_merge_recursive_distinct()
     return $aMerged;
 }
 
-/**
- * Wywołuje na każdym elemencie tablicy przekazaną funkcję i zwraca jej wynik do
- * tablicy wynikowej.
- *
- * @example
- * <code>
- *      $prices = array_walk_closure($someArray, function($value, $key) {
- *          return $value->getPrice();
- *      });
- * </code>
- *
- * @param ArrayAccess $array
- * @param Closure $closure
- * @return array
- */
-function array_walk_closure($array, Closure $closure) // XXX nie można wymusić ArrayAccess, bo nie przechodzą zwykłe tablice :/
+function array_map_closure($array, Closure $closure) // XXX nie można wymusić ArrayAccess, bo nie przechodzą zwykłe tablice :/
 {
     $result = array();
     foreach ($array as $k => $v) {
