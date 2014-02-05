@@ -31,7 +31,7 @@ class Debug
                 break;
             case self::CONFIG_SHOW_MAX:
                 ini_set('xdebug.var_display_max_children', 30);
-                ini_set('xdebug.var_display_max_depth', 5);
+                ini_set('xdebug.var_display_max_depth', 15);
                 break;
         }
     }
