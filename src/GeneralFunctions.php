@@ -28,11 +28,17 @@ function &array_merge_recursive_distinct()
     return $aMerged;
 }
 
-function array_map_closure($array, Closure $closure) // XXX nie można wymusić ArrayAccess, bo nie przechodzą zwykłe tablice :/
+function array_map_closure($array, Closure $dataFn, Closure $keyFn = null)
 {
     $result = array();
+    if (null === $keyFn) {
+        $keyFn = function ($v, $k, $i) {
+            return $i;
+        };
+    }
+    $i = 0;
     foreach ($array as $k => $v) {
-        $result[] = $closure($v, $k);
+        $result[$keyFn($v, $k, $i++)] = $dataFn($v, $k);
     }
     return $result;
 }
