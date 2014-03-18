@@ -96,9 +96,9 @@ function mb_ucwords($str) {
 class FatalErrorException extends Exception {}
 function brs_error_handler($errno, $errstr, $errfile, $errline) {
     if($errno == E_DEPRECATED) return false;
-    // ini_set('display_errors', 0); // XXX sam nie wiem - jak jest 1, to w cli mode wyjątki pokazują się dwa razy... a jak to jest, to nie wali fatalami na ekran wcale...
-    //ini_set('display_errors', 1);
-    ini_set('log_errors', 1);
+    if($errno == E_STRICT) return false;
+    // ini_set('display_errors', 1);
+    // ini_set('log_errors', 1);
     throw new FatalErrorException(sprintf('%s in file %s line %s', $errstr, $errfile, $errline));
 }
 function convert_errors_to_exceptions() {
