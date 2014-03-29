@@ -27,20 +27,21 @@ abstract class FileUtils
     }
 
     public static function sizeToBytes($from) {
-        $number = substr($from, 0, -2);
-        switch(strtoupper(substr($from, -2))){
-            case "KB":
+        $from = trim(strtoupper($from), 'B');
+        $number = substr($from, 0, -1);
+        switch(substr($from, -1)) {
+            case 'K':
                 return $number*1024;
-            case "MB":
+            case 'M':
                 return $number*pow(1024,2);
-            case "GB":
+            case 'G':
                 return $number*pow(1024,3);
-            case "TB":
+            case 'T':
                 return $number*pow(1024,4);
-            case "PB":
+            case 'P':
                 return $number*pow(1024,5);
             default:
-                return $from;
+                return (int) $from;
         }
     }
 }
