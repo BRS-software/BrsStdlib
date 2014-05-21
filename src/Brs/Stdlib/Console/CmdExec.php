@@ -97,7 +97,7 @@ class CmdExec
                 ob_start();
             }
             // $this->stdoutLastLine = exec($cmd, $this->stdoutArr, $this->execStatus);
-            $this->stdoutLastLine = passthru($cmd, $this->execStatus);
+            $this->stdoutLastLine = passthru(sprintf('%s 2>&1', $cmd), $this->execStatus);
             $this->executedTimes++;
 
             if ($this->outputBuffering) {
