@@ -28,7 +28,7 @@ class CmdExec
     public function __construct($cmd = null)
     {
         if ($cmd) {
-            $this->setCmd($cmd);
+            call_user_func_array([$this, 'setCmd'], func_get_args());
         }
     }
 
