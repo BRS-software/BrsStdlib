@@ -1,5 +1,15 @@
 <?php
 
+// register_shutdown_function('shutdownFunction');
+// function shutDownFunction() {
+//     $error = error_get_last();
+//     if ($error) {
+//         // XXX tu jest problem z ustawianiem nagłówka, bo są już wysłane nagłówki z error i trzeba by ob_start() gdzieś na początku dać, bo nie zawsze jest w deszkę
+//         // http://stackoverflow.com/a/10545621/1418773
+//         header("HTTP/1.1 500 Internal Server Error");
+//     }
+// }
+
 /**
  * Funkcja robiąca rekursywnego normalnego merga przekazanych tablic.
  * Funkcja znaleziona na php.net w komentarzach userów.
@@ -108,7 +118,7 @@ function convert_errors_to_exceptions() {
 /**
  * mkdir skipping current set umask
  */
-function mkdir_fix($path, $mode = 0777, $recursive = false) {
+function mkdir_fix($path, $recursive = false, $mode = 0771) {
     $oldumask = umask(0);
     if ($recursive) {
         $dirs = explode(DIRECTORY_SEPARATOR , $path);
@@ -146,9 +156,9 @@ function rrmdir($prefix, $dir) {
     system("rm -rf " . escapeshellarg($dir));
 }
 
-function rcopy($src, $dst, $mkdirMode = 0777, $mkdirRecursive = false) {
+function rcopy($src, $dst, $mkdirRecursive = false, $mkdirMode = 0771) {
     $dir = opendir($src);
-    mkdir_fix($dst, $mkdirMode, $mkdirRecursive);
+    mkdir_fix($dst, $mkdirRecursive, $mkdirMode);
     while(false !== ( $file = readdir($dir)) ) {
         if (( $file != '.' ) && ( $file != '..' )) {
             if ( is_dir($src . '/' . $file) ) {
