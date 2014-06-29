@@ -15,18 +15,18 @@ namespace Brs\Stdlib;
  */
 class PublicElement implements PublicElementInterface
 {
-    protected $serverPath;
+    protected $localPath;
     protected $publicPath;
 
-    public function __construct($serverPath, $publicPath)
+    public function __construct($localPath, $publicPath)
     {
-        $this->serverPath = $serverPath;
+        $this->localPath = $localPath;
         $this->publicPath = $publicPath;
     }
 
-    public function getServerPath()
+    public function getLocalPath()
     {
-        return $this->serverPath;
+        return $this->localPath;
     }
 
     public function getPublicPath()
