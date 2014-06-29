@@ -24,7 +24,7 @@ class Imagick extends \Imagick
     public function resizeImageToDimensions($width, $height, $dimensionsUnit, $dpi)
     {
         $width = Size2px::conv2px($width, $dimensionsUnit, $dpi);
-        $height = Size2px::conv2px($width, $dimensionsUnit, $dpi);
+        $height = Size2px::conv2px($height, $dimensionsUnit, $dpi);
         $this->resizeImage($width, $height, Imagick::FILTER_LANCZOS, 0.9, false);
         return $this;
     }
