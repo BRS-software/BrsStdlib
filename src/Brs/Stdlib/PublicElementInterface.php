@@ -15,6 +15,6 @@ namespace Brs\Stdlib;
  */
 interface PublicElementInterface
 {
-    public function getServerPath();
+    public function getLocalPath();
     public function getPublicPath();
 }
