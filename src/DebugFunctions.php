@@ -8,15 +8,19 @@ if (! class_exists('Brs\Stdlib\Debug\Debug')) {
 }
 
 // set default debug depth
-dbgSet(Debug::CONFIG_SHOW_MED);
+dbgCfg(Debug::CONFIG_SHOW_MED);
 
 // disable html_error
 if (Debug::isTextSapi()) {
     ini_set('html_errors', 0);
 }
 
-function dbgSet($config) {
-    Debug::set($config);
+function dbgCfg($config) {
+    Debug::setConfig($config);
+}
+
+function dbgSapi($sapi) {
+    Debug::setSapi($sapi);
 }
 
 /**

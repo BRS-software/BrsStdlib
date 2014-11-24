@@ -10,7 +10,7 @@ class Debug
     const CONFIG_SHOW_MIN = 'min';
 
     public static $maxOutputLength = 100000;
-    protected static $sapi = null;
+    public static $sapi = null;
 
     public static function registerFunctions()
     {
@@ -18,7 +18,7 @@ class Debug
         self::set(self::CONFIG_SHOW_MED);
     }
 
-    public static function set($config)
+    public static function setConfig($config)
     {
         switch($config) {
             case self::CONFIG_SHOW_MIN:
@@ -41,13 +41,22 @@ class Debug
     {
         if (static::$sapi === null) {
             if (isset($_SERVER) && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 'XMLHttpRequest' === $_SERVER['HTTP_X_REQUESTED_WITH']) {
-                // ini_set('html_errors', 0);
-                static::$sapi = 'ajax';
+                self::setSapi('ajax');
             } else {
-                static::$sapi = PHP_SAPI;
+                self::setSapi(PHP_SAPI);
             }
         }
         return static::$sapi;
+    }
+
+    public static function setSapi($sapi)
+    {
+        static::$sapi = strtolower(trim($sapi));
+        if (self::isTextSapi()) {
+            ini_set('html_errors', 0);
+        } else {
+            ini_set('html_errors', 1);
+        }
     }
 
     public static function isTextSapi()
