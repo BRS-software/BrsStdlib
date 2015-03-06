@@ -32,27 +32,4 @@ abstract class BootstrapHelper
         }
         throw new RuntimeException('Composer autoloader not found');
     }
-
-    public static function requireZF()
-    {
-        // check if ZF loaded
-        if (! class_exists('Zend\Version\Version')) {
-            throw new RuntimeException('Zend Framework 2 not found. Run first ./composer.phar install');
-        }
-    }
-
-    public static function initZF($value='')
-    {
-        self::requireZF();
-        chdir(dirname(dirname(dirname(dirname(getcwd())))));
-        $GLOBALS['zfapp'] = \Zend\Mvc\Application::init(require 'config/application.config.php');
-        $GLOBALS['zfapp']->getServiceManager()->setAllowOverride(true); // to the possibility of replacing original services by mock objects
-    }
-
-    public function initZFForIntegrationTests($watchArg = '--group integration')
-    {
-        if (false !== strpos(implode(' ', $GLOBALS['argv']), $watchArg)) {
-            self::initZF();
-        }
-    }
 }
