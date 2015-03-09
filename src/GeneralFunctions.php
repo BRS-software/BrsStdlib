@@ -53,6 +53,25 @@ function array_map_closure($array, Closure $dataFn, Closure $keyFn = null)
     return $result;
 }
 
+function array_filter_custom($array, $toRemove, $recursive = false)
+{
+    if (! is_array($toRemove) && (! $toRemove instanceof Closure)) {
+        $toRemove = [$toRemove];
+    }
+    return array_filter($array, function (&$v) use ($toRemove, $recursive) {
+        if ($toRemove instanceof Closure) {
+            return $toRemove($v);
+        } elseif (in_array($v, $toRemove, true)) {
+            return false;
+        } elseif ($recursive && is_array($v)) {
+            $v = array_filter_custom($v, $toRemove, $recursive);
+            return true;
+        } else {
+            return true;
+        }
+    });
+}
+
 // json_decode_nice('{json:1, x: {"aaa": "A\B\C"}}'
 function json_decode_nice($json, $assoc = true) {
     // remove comments
@@ -64,7 +83,13 @@ function json_decode_nice($json, $assoc = true) {
     // add apostrophes to text keys
     // $json = preg_replace('/([{,]+)(\s*)([^"]+?)\s*:/','$1"$3":', $json);
     $json = preg_replace('/([{,]+)(\s*)([\w]+?)\s*:/','$1"$3":', $json);
-    // dbg($json);
+    // convert {"name":'map',"type":'component'} to {"name":"map","type":"component"}
+    $json = str_replace(
+        ["{'", ":'", "'}", "',"],
+        ['{"', ':"', '"}', '",'],
+        $json
+    );
+    // dbgd($json);
     return json_decode($json,$assoc);
 }
 
