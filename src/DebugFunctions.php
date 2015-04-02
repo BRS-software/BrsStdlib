@@ -58,7 +58,7 @@ function dbgD($var = null, $label = null, $echo = true)
 function dbgA($var/*[, $var2, $var3, ...]*/)
 {
     foreach (func_get_args() as $i => $var) {
-        Debug::dump($var, 'var ' . $i, true, false);
+        Debug::dump($var, null, true, false);
     }
     echo Debug::showCall();
 }
@@ -69,7 +69,7 @@ function dbgA($var/*[, $var2, $var3, ...]*/)
 function dbgAD(/*[$var1, $var2, $var3, ...]*/)
 {
     foreach (func_get_args() as $i => $var) {
-        Debug::dump($var, 'var ' . $i, true, false);
+        Debug::dump($var, null, true, false);
     }
     echo Debug::showCall();
     die(Debug::htmlFormat("die!\n\n", 'color:red'));
