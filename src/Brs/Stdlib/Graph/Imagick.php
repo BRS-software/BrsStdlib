@@ -63,24 +63,28 @@ class Imagick extends \Imagick
         return [$this->getImageX(), $this->getImageY()];
     }
 
-    public function rotateImageAroundAxis($background, $degrees, $ax = null, $ay = null)
+    public function rotateImageAroundAxis($degrees, $ax = null, $ay = null)
     {
         if ($degrees) {
             $newCoordinates = Geometry::calcCoordinatesForRotateObjectInscribedInRectangular(
-                $this->getImageX(),
-                $this->getImageY(),
+                0,
+                0,
                 $this->getImageWidth(),
                 $this->getImageHeight(),
                 $degrees,
                 $ax,
                 $ay
             );
-            // dbgd($newCoordinates);
+
             $this
-                ->setImageX($newCoordinates['x'])
-                ->setImageY($newCoordinates['y'])
+                ->setImageX($this->getImageX() + $newCoordinates['x'])
+                ->setImageY($this->getImageY() + $newCoordinates['y'])
             ;
-            $this->rotateImage($background, $degrees);
+
+            // $background = 'graya(50%, 0.5)';
+            // $this->rotateImage($background, $degrees);
+            $this->setImageVirtualPixelMethod(Imagick::VIRTUALPIXELMETHOD_TRANSPARENT);
+            $this->distortImage(Imagick::DISTORTION_SCALEROTATETRANSLATE, [$this->getImageWidth()/2, $this->getImageHeight()/2, 1, $degrees], true);
         }
         return $this;
     }
