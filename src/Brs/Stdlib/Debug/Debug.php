@@ -20,6 +20,8 @@ class Debug
 
     public static function setConfig($config)
     {
+        ini_set('xdebug.cli_color', 1);
+
         switch($config) {
             case self::CONFIG_SHOW_MIN:
                 ini_set('xdebug.var_display_max_children', 10);
