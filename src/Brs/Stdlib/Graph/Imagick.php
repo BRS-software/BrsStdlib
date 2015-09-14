@@ -88,4 +88,27 @@ class Imagick extends \Imagick
         }
         return $this;
     }
+
+    public function autoRotateImage()
+    {
+        $orientation = $this->getImageOrientation();
+
+        switch($orientation) {
+            case \Imagick::ORIENTATION_BOTTOMRIGHT:
+                $this->rotateimage("#000", 180); // rotate 180 degrees
+                break;
+
+            case \Imagick::ORIENTATION_RIGHTTOP:
+                $this->rotateimage("#000", 90); // rotate 90 degrees CW
+                break;
+
+            case \Imagick::ORIENTATION_LEFTBOTTOM:
+                $this->rotateimage("#000", -90); // rotate 90 degrees CCW
+                break;
+        }
+
+        // Now that it's auto-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image!
+        $this->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
+        return $this;
+    }
 }
