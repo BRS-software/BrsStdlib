@@ -14,13 +14,13 @@
         "phpunit/PHPUnit": "3.7.*"
     },
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "Brs\\Stdlib\\": "src/",
             "BrsStdlibTest\\": "tests/"
         },
         "files": [
-            "src/GeneralFunctions.php",
-            "src/DebugFunctions.php"
+            "functions/GeneralFunctions.php",
+            "functions/DebugFunctions.php"
         ],
         "classmap": [
             "./Module.php"

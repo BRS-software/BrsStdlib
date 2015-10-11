@@ -4,7 +4,7 @@ use Brs\Stdlib\Debug\Debug;
 
 // when autloader is not available
 if (! class_exists('Brs\Stdlib\Debug\Debug')) {
-    require __DIR__ . '/Brs/Stdlib/Debug/Debug.php';
+    require dirname(__DIR__) . '/src/Debug/Debug.php';
 }
 
 // set default debug depth

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Brs\Stdlib\File;
+namespace Brs\Stdlib\File\Type;
 
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -16,18 +16,10 @@ use PHPExcel_IOFactory;
  * @author Tomasz Borys <t.borys@brs-software.pl>
  * @version 1.0 2014-12-18
  */
-class Excel extends AbstractFile
+class Excel extends Generic
 {
     protected $excel;
     protected $writer;
-
-    public function __construct($name = null, PHPExcel $excel = null)
-    {
-        $this->setExcel($excel ?: new PHPExcel());
-        if ($name) {
-            $this->setName($name);
-        }
-    }
 
     public function getContentType()
     {
@@ -42,6 +34,9 @@ class Excel extends AbstractFile
 
     public function getExcel()
     {
+        if (null === $this->excel) {
+            $this->setExcel(new PHPExcel());
+        }
         return $this->excel;
     }
 
@@ -59,13 +54,12 @@ class Excel extends AbstractFile
         return $this;
     }
 
-    public function saveFile($path)
+    protected function saveFile($path)
     {
         $this->getWriter()->save($path);
-        return $this;
     }
 
-    public function readFile($path)
+    protected function readFile($path)
     {
         // TODO
         throw new Exception\NotSupportedException('This method is not supported yet');
