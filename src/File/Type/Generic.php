@@ -40,7 +40,7 @@ class Generic extends AbstractType
 
     protected function saveFile()
     {
-        if ($this->unsavedContents || ! $this->isSaved()) {
+        if ($this->hasUnsavedContents() || ! $this->isSaved()) {
             file_put_contents($this->getPath(), $this->unsavedContents, LOCK_EX);
         }
     }

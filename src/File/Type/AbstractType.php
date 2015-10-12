@@ -95,7 +95,7 @@ abstract class AbstractType implements FileInterface, SendableFileInterface
     {
         $this->path = $path;
         $this->isTmp = false;
-        $this->setIsSaved(file_exists($path));
+        $this->setIsSaved(file_exists($path) && ! $this->hasUnsavedContents());
         return $this;
     }
 
@@ -127,6 +127,11 @@ abstract class AbstractType implements FileInterface, SendableFileInterface
         $this->unsavedContents = $contents;
         $this->setIsSaved(false);
         return $this;
+    }
+
+    public function hasUnsavedContents()
+    {
+        return $this->unsavedContents !== null;
     }
 
     public function isTmp()
