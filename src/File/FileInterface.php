@@ -14,10 +14,42 @@ namespace Brs\Stdlib\File;
  */
 interface FileInterface
 {
+    /**
+     * @return string File path
+     */
     public function getPath();
+
+    /**
+     * @return string File MIME type
+     */
     public function getContentType();
+
+    /**
+     * @param string
+     * @return FileInterface
+     */
     public function setContents($contents);
+
+    /**
+     * @return boolean
+     */
     public function isSaved();
+
+    /**
+     * Save the file.
+     * @return FileInterface
+     */
     public function save();
+
+    /**
+     * Save the file as.
+     * @param string $path New file path
+     * @return FileInterface
+     */
+    public function saveAs($path);
+
+    /**
+     * @return string
+     */
     public function read();
 }

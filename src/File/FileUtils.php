@@ -13,10 +13,15 @@ use Closure;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2013-03-13
+ * @version 1.0
  */
 abstract class FileUtils
 {
+    /**
+     * @param string $filename file name to sanitize
+     * @param array $options e.g. ['allowNational', 'toLower']
+     * @return string safe file name
+     */
     public static function sanitizeFilename($filename, array $options = [])
     {
         if (! in_array('allowNational', $options)) {
@@ -28,6 +33,10 @@ abstract class FileUtils
         return preg_replace(['/\s/', '/[^a-zA-Z0-9-_\.]/'], ['_', ''], $filename);
     }
 
+    /**
+     * @param string size e.g. 1MB, 2GB, 10KB, 1024
+     * @return integer Size in bytes
+     */
     public static function sizeToBytes($from)
     {
         $from = trim(strtoupper($from), 'B');
@@ -48,6 +57,9 @@ abstract class FileUtils
         }
     }
 
+    /**
+     * @return string file mime type
+     */
     public static function getMimeType($path)
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -86,6 +98,9 @@ abstract class FileUtils
         }
     }
 
+    /**
+     * @return the system temporary directory
+     */
     public static function getTmpDir()
     {
         if (function_exists('sys_get_temp_dir')) {
