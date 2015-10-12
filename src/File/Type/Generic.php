@@ -18,136 +18,15 @@ use Brs\Stdlib\File\FileUtils;
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
  */
-class Generic implements FileInterface, SendableFileInterface
+class Generic extends AbstractType
 {
-    protected $attachmentName;
-    protected $path;
-    protected $unsavedContents;
-    protected $isSaved = false;
-    protected $isTmpFile = false;
-    protected $contentType;
-
-    public function __construct($path = null, $attachmentName = null)
+    protected function copyFile($path)
     {
-        if ($path) {
-            $this->setPath($path);
-        }
-        if ($attachmentName) {
-            $this->setAttachmentName($attachmentName);
-        }
-        $this->isSaved = file_exists($this->getPath());
-    }
-
-    public function setAttachmentName($attachmentName)
-    {
-        $this->attachmentName = $attachmentName;
-        return $this;
-    }
-
-    public function setPath($path)
-    {
-        $this->path = $path;
-        return $this;
-    }
-
-    public function getPath()
-    {
-        if (empty($this->path)) {
-            $this->setPath(tempnam(FileUtils::getTmpDir(), 'php_tmpfile_'));
-            $this->isTmpFile = true;
-        }
-        return $this->path;
-    }
-
-    public function setContentType($contentType)
-    {
-        $this->contentType = $contentType;
-        return $this;
-    }
-
-    public function getContentType()
-    {
-        if (null === $this->contentType) {
-            $this->setContentType(FileUtils::getMimeType($this->getPath()));
-        }
-        return $this->contentType;
-    }
-
-    public function setContents($contents)
-    {
-        $this->unsavedContents = $contents;
-        $this->isSaved = false;
-        return $this;
-    }
-
-    public function isSaved()
-    {
-        return $this->isSaved;
-    }
-
-    public function stream()
-    {
-        echo $this->readFile();
-        return $this;
-    }
-
-    final public function save()
-    {
-        $this->saveFile();
-        $this->isSaved = true;
-        $this->unsavedContents = null;
-        return $this;
-    }
-
-    final public function saveAs($path)
-    {
-        $this->setPath($path);
-        return $this->save();
-    }
-
-    final public function read()
-    {
-        if (! file_exists($path = $this->getPath())) {
-            throw new Exception\FileNotFoundException(
-                sprintf('File "%s" not found', $path)
-            );
-        }
-        $this->isSaved = true;
-        $this->unsavedContents = null;
-        return $this->readFile();
-    }
-
-    public function getAttachmentName()
-    {
-        if ($this->attachmentName instanceof Closure) {
-            $n = $this->attachmentName;
-            $name = $n($this);
+        if ($this->isTmp()) {
+            rename($this->getPath(), $path);
         } else {
-            $name = $this->attachmentName;
+            copy($this->getPath(), $path);
         }
-        return (string) $name;
-    }
-
-    public function getContentsLength()
-    {
-        if ($this->isSaved()) {
-            return filesize($this->getPath());
-        } else {
-            return mb_strlen($this->unsavedContents, '8bit');
-        }
-    }
-
-    public function sendToBrowser($attachmentName = null, $contentType = null, $inline = false)
-    {
-        FileUtils::send(
-            function () {
-                $this->stream();
-            },
-            $contentType ?: $this->getContentType(),
-            $attachmentName ?: $this->getAttachmentName(),
-            $this->getContentsLength(),
-            $inline
-        );
     }
 
     protected function readFile()
@@ -161,7 +40,7 @@ class Generic implements FileInterface, SendableFileInterface
 
     protected function saveFile()
     {
-        if ($this->unsavedContents) {
+        if ($this->unsavedContents || ! $this->isSaved()) {
             file_put_contents($this->getPath(), $this->unsavedContents, LOCK_EX);
         }
     }
