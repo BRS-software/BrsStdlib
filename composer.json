@@ -25,5 +25,6 @@
         "classmap": [
             "./Module.php"
         ]
-    }
+    },
+    "minimum-stability": "dev"
 }
