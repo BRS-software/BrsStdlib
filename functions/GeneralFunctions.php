@@ -1,22 +1,19 @@
 <?php
 
-// register_shutdown_function('shutdownFunction');
-// function shutDownFunction() {
-//     $error = error_get_last();
-//     if ($error) {
-//         // XXX tu jest problem z ustawianiem nagłówka, bo są już wysłane nagłówki z error i trzeba by ob_start() gdzieś na początku dać, bo nie zawsze jest w deszkę
-//         // http://stackoverflow.com/a/10545621/1418773
-//         header("HTTP/1.1 500 Internal Server Error");
-//     }
-// }
+/**
+ * (c) BRS software - Tomasz Borys <t.borys@brs-software.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+use Brs\Stdlib\Exception\FatalErrorException;
 
 /**
- * Funkcja robiąca rekursywnego normalnego merga przekazanych tablic.
- * Funkcja znaleziona na php.net w komentarzach userów.
- *
+ * Normally recursive merging of arrays
  * @return array
  */
-function &array_merge_recursive_distinct()
+function &array_merge_recursive_distinct(/*array1, array2, arrayN*/)
 {
     $aArrays = func_get_args();
     $aMerged = $aArrays[0];
@@ -38,6 +35,22 @@ function &array_merge_recursive_distinct()
     return $aMerged;
 }
 
+/**
+ * $map = array_map_closure(
+ *      $inputArray,
+ *      function ($inputArrayValue, $inputArrayKey) {
+ *          return $inputArrayValue->toArray();
+ *      },
+ *      function ($inputArrayValue, $inputArrayKey, $i) {
+ *          return $inputArrayValue->getName() . $i;
+ *      }
+ * );
+ *
+ * @param array|ArrayAccess $array input array
+ * @param Closure $dataFn function creates map value
+ * @param Closure $keyFn function creates map key
+ * @return array mapped input array
+ */
 function array_map_closure($array, Closure $dataFn, Closure $keyFn = null)
 {
     $result = array();
@@ -53,18 +66,24 @@ function array_map_closure($array, Closure $dataFn, Closure $keyFn = null)
     return $result;
 }
 
+/**
+ * Moving value to another position (index) in array
+ * @param array $array
+ * @param integer $from source index
+ * @param integer $to destination index
+ */
 function array_move_value_by_index(array $array, $from = null, $to = null) {
     if (null === $from) {
         $from = count($array) - 1;
     }
     if (!isset($array[$from])) {
-        throw new Exception("Offset $from does not exist");
+        throw new FatalErrorException("Offset $from does not exist");
     }
-    if (array_keys($array) != range(0, count($array) - 1)) {
-        throw new Exception("Invalid array keys");
+    if (array_keys($array) !== range(0, count($array) - 1)) {
+        throw new FatalErrorException("Invalid array keys");
     }
     if ($to < 0) {
-        throw new Exception("New offset cannot be a negative number");
+        throw new FatalErrorException("New offset cannot be a negative number");
     }
 
     $value = $array[$from];
@@ -80,6 +99,13 @@ function array_move_value_by_index(array $array, $from = null, $to = null) {
     return $array;
 }
 
+/**
+ * Recursively filters elements of an array
+ * @param array $array
+ * @param string|array|Closure value(s) to remove from array
+ * @param boolean $recursive
+ * @return array
+ */
 function array_filter_custom($array, $toRemove, $recursive = false)
 {
     if (! is_array($toRemove) && (! $toRemove instanceof Closure)) {
@@ -99,49 +125,75 @@ function array_filter_custom($array, $toRemove, $recursive = false)
     });
 }
 
-// json_decode_nice('{json:1, x: {"aaa": "A\B\C"}}'
-function json_decode_nice($json, $assoc = true) {
+
+/**
+ * Create an array from more user friendly format than pure json.
+ * You can use also pure json on the input.
+ *
+ * Friendly json e.g.
+ * {someKey:1, x: {a: "value"}, y: {b: 123}}
+ *
+ * Mixed json e.g.
+ * {someKey:1, x: {"a": "value"}, "y": {"b": 123}}
+ *
+ * @param string $friendlyJson
+ * @param boolean $assoc
+ * @return array
+ */
+function json_decode_nice($friendlyJson, $assoc = true)
+{
     // remove comments
-    $json = preg_replace('#^\s*\/\/.*#m', '', $json);
+    $friendlyJson = preg_replace('#^\s*\/\/.*#m', '', $friendlyJson);
     // remove unwanted characters and last comma
-    $json = str_replace(["\n", "\r", '\\'], ['', '', '\\\\'], $json);
+    $friendlyJson = str_replace(["\n", "\r", '\\'], ['', '', '\\\\'], $friendlyJson);
     // remove last comma
-    $json = preg_replace('/\,(\s*)(\}|\])/', '$2', $json);
+    $friendlyJson = preg_replace('/\,(\s*)(\}|\])/', '$2', $friendlyJson);
     // add apostrophes to text keys
-    // $json = preg_replace('/([{,]+)(\s*)([^"]+?)\s*:/','$1"$3":', $json);
-    $json = preg_replace('/([{,]+)(\s*)([\w]+?)\s*:/','$1"$3":', $json);
+    // $friendlyJson = preg_replace('/([{,]+)(\s*)([^"]+?)\s*:/','$1"$3":', $friendlyJson);
+    $friendlyJson = preg_replace('/([{,]+)(\s*)([\w]+?)\s*:/','$1"$3":', $friendlyJson);
     // convert {"name":'map',"type":'component'} to {"name":"map","type":"component"}
-    $json = str_replace(
+    $friendlyJson = str_replace(
         ["{'", ":'", "'}", "',"],
         ['{"', ':"', '"}', '",'],
-        $json
+        $friendlyJson
     );
-    // dbgd($json);
-    return json_decode($json,$assoc);
+    return json_decode($friendlyJson, $assoc);
 }
 
 /**
- * Serializuje obiekt do wartości skalarnej.
+ * Serialize the object to scalar value
  * @param object $var
  * @return scalar
  */
 function object_to_scalar($var)
 {
-    if (! is_object($var))
-        trigger_error('Value is not an object', E_USER_ERROR);
-
-    if (method_exists($var, 'toScalar'))        $scalar = $var->toScalar();
-    elseif (method_exists($var, '__toString'))  $scalar = $var->__toString();
-    elseif (method_exists($var, 'toString'))    $scalar = $var->toString();
-    elseif (method_exists($var, 'toValue'))     $scalar = $var->toValue();
-    else trigger_error(sprintf('Impossible convert object class %s to scalar value', get_class($var)));
-
-    if (! is_scalar($scalar))
-        trigger_error(sprintf('An error occured during serialize object class %s', get_class($var)));
+    if (! is_object($var)) {
+        throw new FatalErrorException('Value is not an object');
+    }
+    if (method_exists($var, 'toScalar')) {
+        $scalar = $var->toScalar();
+    } elseif (method_exists($var, 'toString')) {
+        $scalar = $var->toString();
+    } elseif (method_exists($var, '__toString'))  {
+        $scalar = $var->__toString();
+    } else {
+        throw new FatalErrorException(
+            sprintf('Impossible convert object class %s to scalar value', get_class($var))
+        );
+    }
+    if (! is_scalar($scalar)) {
+        throw new FatalErrorException(
+            sprintf('An error occured during serialize object class %s', get_class($var))
+        );
+    }
 
     return $scalar;
 }
 
+/**
+ * @param string $string
+ * @param string $encoding
+ */
 function mb_ucfirst($string, $encoding = "UTF-8")
 {
     $strlen = mb_strlen($string, $encoding);
@@ -150,25 +202,19 @@ function mb_ucfirst($string, $encoding = "UTF-8")
     return mb_strtoupper($firstChar, $encoding) . $then;
 }
 
-function mb_ucwords($str) {
+/**
+ * @param string $string
+ */
+function mb_ucwords($string)
+{
     return mb_convert_case($str, MB_CASE_TITLE, "UTF-8");
 }
 
-
-class FatalErrorException extends Exception {}
-function brs_error_handler($errno, $errstr, $errfile, $errline) {
-    if($errno == E_DEPRECATED) return false;
-    if($errno == E_STRICT) return false;
-    // ini_set('display_errors', 1);
-    // ini_set('log_errors', 1);
-    throw new FatalErrorException(sprintf('%s in file %s line %s', $errstr, $errfile, $errline));
-}
-function convert_errors_to_exceptions() {
-    set_error_handler('brs_error_handler');
-}
-
 /**
- * mkdir skipping current set umask
+ * mkdir skipping current set umask.
+ * @param string $path
+ * @param boolean $recursive
+ * @param int $mode
  */
 function mkdir_fix($path, $recursive = false, $mode = 0771) {
     $oldumask = umask(0);
@@ -192,6 +238,11 @@ function mkdir_fix($path, $recursive = false, $mode = 0771) {
     return true;
 }
 
+/**
+ * Recursive rmdir.
+ * @param string $prefix part of the path above which it is impossible to remove
+ * @param string $dir to remove
+ */
 function rrmdir($prefix, $dir) {
     $prefix = rtrim(trim($prefix), '/');
     $dir = str_replace('..', '', rtrim(trim($dir), '/'));
@@ -208,6 +259,13 @@ function rrmdir($prefix, $dir) {
     system("rm -rf " . escapeshellarg($dir));
 }
 
+/**
+ * Copy of directory.
+ * @param string $src
+ * @param string $dst
+ * @param boolean $mkdirRecursive
+ * @param int $mkdirMode
+ */
 function rcopy($src, $dst, $mkdirRecursive = false, $mkdirMode = 0771) {
     $dir = opendir($src);
     mkdir_fix($dst, $mkdirRecursive, $mkdirMode);
@@ -223,3 +281,30 @@ function rcopy($src, $dst, $mkdirRecursive = false, $mkdirMode = 0771) {
     }
     closedir($dir);
 }
+
+/**
+ * Converts PHP errors and warnings to exceptions.
+ * @param integer $errno
+ * @param string $errstr
+ * @param string $errfile
+ * @param integer $errline
+ * @throws FatalErrorException
+ */
+function brs_error_handler($errno, $errstr, $errfile, $errline)
+{
+    if(in_array($arrno, [E_DEPRECATED, E_STRICT])) {
+        return false;
+    }
+    throw new FatalErrorException(
+        sprintf('%s in file %s line %s', $errstr, $errfile, $errline)
+    );
+}
+
+/**
+ * Enables converting errors to exceptions
+ */
+function convert_errors_to_exceptions()
+{
+    set_error_handler('brs_error_handler');
+}
+

@@ -11,7 +11,7 @@ namespace Brs\Stdlib\Exception;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2013-04-26
+ * @version 1.0
  */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
 {}

@@ -11,8 +11,6 @@ namespace Brs\Stdlib\Exception;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0
  */
-interface ExceptionInterface
-{
-}
+class FatalErrorException extends \Exception implements ExceptionInterface
+{}

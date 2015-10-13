@@ -14,7 +14,7 @@ use Brs\Stdlib\Math\Geometry;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2013-12-05
+ * @version 1.0
  */
 class Imagick extends \Imagick
 {

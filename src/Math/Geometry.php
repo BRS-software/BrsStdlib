@@ -11,7 +11,7 @@ namespace Brs\Stdlib\Math;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2013-12-05
+ * @version 1.0
  */
 abstract class Geometry
 {

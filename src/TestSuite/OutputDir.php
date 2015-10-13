@@ -11,7 +11,7 @@ namespace Brs\Stdlib\TestSuite;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2014-06-16
+ * @version 1.0
  */
 class OutputDir
 {

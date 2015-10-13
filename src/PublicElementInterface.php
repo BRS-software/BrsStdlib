@@ -11,10 +11,17 @@ namespace Brs\Stdlib;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2013-01-24
+ * @version 1.0
  */
 interface PublicElementInterface
 {
+    /**
+     * @return string path to the element
+     */
     public function getLocalPath();
+
+    /**
+     * @return string path as part of url to the element
+     */
     public function getPublicPath();
 }

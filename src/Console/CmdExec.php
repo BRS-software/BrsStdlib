@@ -13,7 +13,6 @@ use Brs\Stdlib\Exception;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2014-04-30
  */
 class CmdExec
 {

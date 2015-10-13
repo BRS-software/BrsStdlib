@@ -13,7 +13,7 @@ use RuntimeException;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2013-04-16
+ * @version 1.0
  */
 abstract class BootstrapHelper
 {

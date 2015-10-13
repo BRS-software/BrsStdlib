@@ -11,7 +11,7 @@ namespace Brs\Stdlib;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2013-11-06
+ * @version 1.0
  */
 class DbFile
 {

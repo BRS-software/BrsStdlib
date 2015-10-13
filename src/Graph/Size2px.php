@@ -11,7 +11,7 @@ namespace Brs\Stdlib\Graph;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2013-08-30
+ * @version 1.0
  */
 abstract class Size2px
 {

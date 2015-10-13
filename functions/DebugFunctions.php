@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * (c) BRS software - Tomasz Borys <t.borys@brs-software.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Brs\Stdlib\Debug\Debug;
 
 // when autloader is not available
@@ -10,15 +17,21 @@ if (! class_exists('Brs\Stdlib\Debug\Debug')) {
 // set default debug depth
 dbgCfg(Debug::CONFIG_SHOW_MED);
 
-// disable html_error
+// disable html_error in text sapi
 if (Debug::isTextSapi()) {
     ini_set('html_errors', 0);
 }
 
+/**
+ * @param string $config Debug::CONFIG_SHOW_*
+ */
 function dbgCfg($config) {
     Debug::setConfig($config);
 }
 
+/**
+ * Force sets the sapi for debug
+ */
 function dbgSapi($sapi) {
     Debug::setSapi($sapi);
 }

@@ -17,7 +17,7 @@ use Brs\Stdlib\TestSuite\TestSuiteHelper;
 
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
- * @version 1.0 2015-01-21
+ * @version 1.0
  */
 abstract class ZfHelper extends  TestSuiteHelper
 {
