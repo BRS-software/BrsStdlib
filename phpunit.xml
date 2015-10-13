@@ -19,6 +19,6 @@
 
     <php>
         <!-- <var name="CONTEXT_APP_ID" value="1" /> -->
-        <var name="USER_INTEGRATION_DBNAME" value="unittest" />
+        <!-- <var name="USER_INTEGRATION_DBNAME" value="unittest" /> -->
     </php>
 </phpunit>

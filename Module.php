@@ -1,13 +1,18 @@
 <?php
 
+/**
+ * (c) BRS software - Tomasz Borys <t.borys@brs-software.pl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace BrsStdlib;
 
+/**
+ * Integration with ZF2.
+ * @author Tomasz Borys (tobo) <t.borys@brs-software.pl>
+ */
 class Module
 {
-    public function __construct()
-    {
-        // include_once __DIR__ . '/src/DebugFunctions.php';
-        // \Brs\Stdlib\Debug\Debug::registerFunctions();
-        // include_once __DIR__ . '/src/GeneralFunctions.php';
-    }
 }

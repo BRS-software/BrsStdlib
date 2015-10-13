@@ -1,7 +1,7 @@
 {
     "name": "brs-software/brs-stdlib",
     "homepage": "https://github.com/brssoftware/BrsStdlib",
-    "description": "Common general classes",
+    "description": "General classes",
     "type": "library",
     "license": "BSD-3-Clause",
     "keywords": [
