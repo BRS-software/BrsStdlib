@@ -292,7 +292,7 @@ function rcopy($src, $dst, $mkdirRecursive = false, $mkdirMode = 0771) {
  */
 function brs_error_handler($errno, $errstr, $errfile, $errline)
 {
-    if(in_array($arrno, [E_DEPRECATED, E_STRICT])) {
+    if(in_array($errno, [E_DEPRECATED, E_STRICT])) {
         return false;
     }
     throw new FatalErrorException(
