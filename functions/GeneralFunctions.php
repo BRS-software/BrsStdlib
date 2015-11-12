@@ -8,6 +8,8 @@
  */
 
 use Brs\Stdlib\Exception\FatalErrorException;
+use Brs\Stdlib\Exception\InvalidArgumentException;
+use Brs\Stdlib\Exception\OutOfBoundsException;
 
 /**
  * Normally recursive merging of arrays
@@ -125,6 +127,30 @@ function array_filter_custom($array, $toRemove, $recursive = false)
     });
 }
 
+/**
+ * Creates the array indexed by key deriving from the internal another array value.
+ * $input = [['a' => 11, 'b' => 12], ['a' => 21, 'b' => 22]];
+ * array_use_key_from_value($input, 'a');
+ * result is: [11 => ['a' => 11, 'b' => 12], 21 => ['a' => 21, 'b' => 22]]
+ * @param array $arr Input array
+ * @param string $useKey
+ * @return array
+ */
+function array_use_key_from_value(array &$arr, $useKey)
+{
+    $tmp = [];
+    foreach ($arr as $v) {
+        if (array_key_exists($useKey, $v)) {
+            $tmp[$v[$useKey]] = $v;
+        } else {
+            throw new OutOfBoundsException(
+                sprintf('Key "%s" not exists in array', $useKey)
+            );
+        }
+    }
+    $arr = $tmp;
+    return $arr;
+}
 
 /**
  * Create an array from more user friendly format than pure json.
