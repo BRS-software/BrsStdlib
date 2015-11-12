@@ -12,5 +12,5 @@ namespace Brs\Stdlib\Exception;
 /**
  * @author Tomasz Borys <t.borys@brs-software.pl>
  */
-class RuntimeException extends \RuntimeException implements ExceptionInterface
+class OutOfBoundsException extends \OutOfBoundsException implements ExceptionInterface
 {}
