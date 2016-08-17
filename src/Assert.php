@@ -242,18 +242,19 @@ class Assert
         return $value;
     }
 
-    public static function email($value, $checkMx = false, $message = 'Email "%s" is invalid') {
-        // Create the syntactical validation regular expression
-        $regexp = "^([\+_a-z0-9-]+)(\.[\+_a-z0-9-]+)*@([a-z0-9-]+)(\.[a-z0-9-]+)*(\.[a-z]{2,4})$";
+    public static function email($value, $checkMx = false, $message = 'Email "%s" is invalid')
+    {
+        $regexp = "/^([\+_a-z0-9-]+)(\.[\+_a-z0-9-]+)*@([a-z0-9-]+)(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/i";
 
-        // Validate the syntax
-        if (!eregi($regexp, $value))
+        if (! preg_match($regexp, $value)) {
             throw new AssertException(sprintf($message, $value));
+        }
 
         if ($checkMx) {
             list($username, $domaintld) = split("@", $email);
-            if (!getmxrr($domaintld, $mxrecords))
+            if (!getmxrr($domaintld, $mxrecords)) {
                 throw new AssertException(sprintf('Email "%s" is invalid. Mx not exists for domain %s', $value, $domaintld));
+            }
         }
         return $value;
     }
