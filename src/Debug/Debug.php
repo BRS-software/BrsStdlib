@@ -296,7 +296,7 @@ class Debug
         }
         
         // remove info about place of calling in PHP7
-        $output = preg_replace('/.*\/Debug\/Debug\.php\:\d*\:/', '', $output);
+        $output = preg_replace('/.*\/Debug\/Debug\.php.*/', '', $output);
         
         if (extension_loaded('xdebug')) {
             $output = preg_replace(["/\=\>\n(\s+)/m", "/\{\n(\s+)\.\.\.\n(\s+)\}/m"], [" => ", ""], $output);
