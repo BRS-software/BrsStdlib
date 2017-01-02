@@ -296,10 +296,10 @@ class Debug
         }
         
         // remove info about place of calling in PHP7
-        if (extension_loaded('xdebug')) {
-            $output = preg_replace(["/\=\>\n(\s+)/m", "/\{\n(\s+)\.\.\.\n(\s+)\}/m"], [" => ", ""], $output);
+        if (static::isTextSapi()) {
+            $output = preg_replace('#\[1m.*\/Debug\/Debug.php.*\n#', "\\", $output);
         } else {
-            $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
+            $output = preg_replace('/.*\/Debug\/Debug\.php:\d*:/', '', $output);
         }
         
         if (extension_loaded('xdebug')) {
